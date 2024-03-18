@@ -13,6 +13,7 @@ program MLP
     Integer, parameter :: entrada = 2 !Quantidade de entradas
     Integer, parameter :: escondida = 3 !Quantidade de camadas escondidas
     Integer, parameter :: saida = 1 !Quantidade de saídas
+    Integer :: alpha
     Integer :: ierror
     Character(len=20) :: Filename, err_string
     
@@ -29,22 +30,16 @@ program MLP
     End do
     
     !initialize variables
-    teta_1(1) = 0.9
-    teta_2(1) = -0.9
-    w(1,1) = 0.9
-    w(2,1) = -0.9
-    w(3,1) = 0.9
-    v(1,1) = -0.9
-    v(1,2) = 0.9
-    v(1,3) = -0.9
-    v(2,1) = 0.9
-    v(2,2) = -0.9
-    v(2,3) = 0.9
-
+    call RANDOM_NUMBER(teta_1)
+    call RANDOM_NUMBER(teta_2)
+    call RANDOM_NUMBER(w)
+    call RANDOM_NUMBER(v)
+    Write(7,*) 'Bias A e B, e, pesos w e v iniciais =', teta_1, teta_2, w, v
     
     !Training iteration
     Write(*,*) 'Insert iteration value'
     Read(*,*) k
+    alpha = 1
     do i = 1,k
         write(7,*) 'valor da iteração', i
         E = 0
@@ -54,10 +49,10 @@ program MLP
             write(7,*) 'valor de z', z
             call soma(z, w, teta_2, u)
             write(7,*) 'valor de u', u
-            call interna(z, u, w, teta_2, d, j)
+            call interna(z, u, w, teta_2, d, j, alpha)
             write(7,*) 'valor de teta_2', teta_2
             write(7,*) 'valor de w', w
-            call inicio(z, u, v, teta_1, d, j, x, w)
+            call inicio(z, u, v, teta_1, d, j, x, w, alpha)
             write(7,*) 'valor de teta_1', teta_1
             write(7,*) 'valor de v', v
         end do
@@ -68,7 +63,8 @@ program MLP
                 E = E + ((d(j,l) - u(l)) ** 2)
             end do
         end do
-        Write(*,*) (E/2)
+        Write(7,*) 'Erro da iteração =', (E/2)
+        alpha = 0.9 * alpha
     end do
     
     !Calculo do erro
@@ -79,6 +75,6 @@ program MLP
                 E = E + ((d(j,l) - u(l)) ** 2)
             end do
         end do
-        Write(*,*) (E/2)
+        Write(7,*) 'Erro do programa =', (E/2)
     
 End Program MLP

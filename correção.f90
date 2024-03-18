@@ -4,12 +4,12 @@ module mod_atualizar
     
     contains
     
-    subroutine interna(a, b, c, d, e, f)
+    subroutine interna(a, b, c, d, e, f, alpha)
     
     Real, intent(in) :: a(:), b(:), e(:,:) !funções ativadas e d
     Real, intent(in out) :: c(:,:), d(:) !Peso e bias
     Integer, intent(in) :: f !conjunto
-    Integer, parameter :: alpha = 1
+    Integer, intent(in) :: alpha
     Integer :: i, j, k
     
         do i = 1,size(b) !Indice de camada saida
@@ -21,12 +21,12 @@ module mod_atualizar
     
     end subroutine interna
     
-    subroutine inicio(a, b, c, d, e, f, g, h)
+    subroutine inicio(a, b, c, d, e, f, g, h, alpha)
     
     Real, intent(in) :: a(:), b(:), g(:,:), e(:,:), h(:,:) !funções ativadas, valores de entrada, d e peso da camada anteiror
     Real, intent(in out) :: c(:,:), d(:) !Peso e bias
     Integer, intent(in) :: f !conjunto
-    Integer, parameter :: alpha = 1
+    Integer, intent(in) :: alpha
     Integer :: i, j, k
     
         do i = 1,size(b) !Indice de camada saida
