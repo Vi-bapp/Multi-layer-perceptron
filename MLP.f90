@@ -45,9 +45,9 @@ program MLP
     !Training iteration
     Write(*,*) 'Insert iteration value'
     Read(*,*) k
-    E = 0
     do i = 1,k
         write(7,*) 'valor da iteração', i
+        E = 0
         do j = 1, treino
             write(7,*) 'valor do conjunto', j
             call soma_ent(x, v, teta_1, z, j)
@@ -60,19 +60,25 @@ program MLP
             call inicio(z, u, v, teta_1, d, j, x, w)
             write(7,*) 'valor de teta_1', teta_1
             write(7,*) 'valor de v', v
-            do l = 1,saida
-                E = E + (((d(j,l) - u(l))**2)/2)
+        end do
+        do j = 1, treino
+            do l =1, saida
+                call soma_ent(x, v, teta_1, z, j)
+                call soma(z, w, teta_2, u)
+                E = E + ((d(j,l) - u(l)) ** 2)
             end do
         end do
+        Write(*,*) (E/2)
     end do
     
     !Calculo do erro
     do j = treino, teste
-        call soma_ent(x, v, teta_1, z, j)
-        call soma(z, w, teta_2, u)
-        do l = 1,saida
-            E = E + (((d(j,l) - u(l))**2)/2)
+            do l = 1,saida
+                call soma_ent(x, v, teta_1, z, j)
+                call soma(z, w, teta_2, u)
+                E = E + ((d(j,l) - u(l)) ** 2)
+            end do
         end do
-    end do
+        Write(*,*) (E/2)
     
 End Program MLP
